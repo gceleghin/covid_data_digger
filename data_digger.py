@@ -1,5 +1,7 @@
 import argparse
 import json
+import xlsxwriter
+import xlwt
 from datetime import date
 from datetime import datetime
 from urllib.request import urlopen
@@ -16,6 +18,16 @@ parser.add_argument(
     '--date',
     type = str,
     help = "Date you want to get the number of cases from, formatted AAAA-MM-DD"
+)
+parser.add_argument(
+    '--xlsx',
+    action='store_true',
+    help = "Write the results in an .xlsx file"
+)
+parser.add_argument(
+    '--xls',
+    action='store_true',
+    help = "Write the results in an .xls file"
 )
 
 args = parser.parse_args()
@@ -91,6 +103,42 @@ def printValues(dataset):
     for region, cases in dataset.items():
         print(region + ": " + str(cases))
 
+def writeToXlsx(dataset, date):
+    workbook = xlsxwriter.Workbook("Covid_data_" + date_to_check + ".xlsx")
+    worksheet = workbook.add_worksheet(date_to_check)
+
+    row = 0
+    col = 0
+
+    worksheet.write(row, col, "Region")
+    worksheet.write(row, col + 1, "Cases")
+    row += 1
+
+    for region, cases in dataset.items():
+        worksheet.write(row, col, region)
+        worksheet.write(row, col + 1, cases)
+        row += 1
+
+    workbook.close()
+
+def writeToXls(dataset, date):
+    workbook = xlwt.Workbook(encoding = "utf-8")
+    worksheet = workbook.add_sheet(date_to_check)
+
+    row = 0
+    col = 0
+
+    worksheet.write(row, col, "Region")
+    worksheet.write(row, col + 1, "Cases")
+    row += 1
+
+    for region, cases in dataset.items():
+        worksheet.write(row, col, region)
+        worksheet.write(row, col + 1, cases)
+        row += 1
+
+    workbook.save("Covid_data_" + date_to_check + ".xls")
+
 
 # Before getting to the negative value solution above,
 # I was sorting by name first, then I was doing a second pass
@@ -117,5 +165,9 @@ regions = processDataIntoRegions(getData(), date_to_check)
 if (len(regions.items())) > 0:
     regions = sortRegions(regions)
     printValues(regions)
+    if (args.xlsx):
+        writeToXlsx(regions, date_to_check)
+    if (args.xls):
+        writeToXls(regions, date_to_check)
 else:
     print("No data available.")
