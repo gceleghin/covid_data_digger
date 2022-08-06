@@ -1,14 +1,41 @@
+import argparse
 import json
 from datetime import date
+from datetime import datetime
 from urllib.request import urlopen
 
 URL_LATEST_DATA = "https://github.com/pcm-dpc/COVID-19/raw/master/dati-json/dpc-covid19-ita-province-latest.json"
 URL_ALL_DATA = "https://github.com/pcm-dpc/COVID-19/raw/master/dati-json/dpc-covid19-ita-province.json"
+DATE_BEGINNING_DATA = "2020-02-24"
 
+date_to_check = str(date.today())
+date_format = "%Y-%m-%d"
 
+parser = argparse.ArgumentParser(description='Covid data digger')
+parser.add_argument(
+    '--date',
+    type = str,
+    help = "Date you want to get the number of cases from, formatted AAAA-MM-DD"
+)
+
+args = parser.parse_args()
+
+if (args.date):
+    try:
+        date_to_check = str(datetime.strptime(args.date, date_format))[:10]
+        if (date_to_check < DATE_BEGINNING_DATA):
+            date_to_check = str(date.today())    
+            print("There is no data available before February 24th 2020, defaulting to today")
+    except ValueError:
+        date_to_check = str(date.today())
+        print("Date format not valid, defaulting to today")
+else:
+    print("No date specified, defaulting to today")
+
+print("Checking statistics for " + date_to_check)
 regions = {}
 
-def getData(url=URL_ALL_DATA):
+def getData(url = URL_ALL_DATA):
     """
     Gets the data from a specified url
     defaulting to all the data available
@@ -18,7 +45,7 @@ def getData(url=URL_ALL_DATA):
     return dataset
 
 
-def processDataIntoRegions(dataset=getData(), day=str(date.today())):
+def processDataIntoRegions(dataset = getData(), day = str(date.today())):
     """
     Returns a dictionary containing 'region': 'cases' pairs
     Accepts a dataset, downloads it if not available
@@ -86,7 +113,7 @@ def printValues(dataset):
 #   )
     
 
-regions = processDataIntoRegions(getData())
+regions = processDataIntoRegions(getData(), date_to_check)
 if (len(regions.items())) > 0:
     regions = sortRegions(regions)
     printValues(regions)
