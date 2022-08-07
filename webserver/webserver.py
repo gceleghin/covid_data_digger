@@ -1,0 +1,32 @@
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse, parse_qs
+import sys
+sys.path.append('../')
+import data_digger
+
+HOSTNAME = "coviddatadigger"
+SERVER_PORT = 8080
+
+class handler (BaseHTTPRequestHandler):
+	def do_GET(self):
+		self.send_response(200)
+		self.send_header('content-type', 'application/json')
+		#self.send_header('content-type', 'text')
+		self.end_headers()
+		date = parse_qs(urlparse(self.path).query).get("date")
+		if (date):
+			json_file = data_digger.main(day = date[0], return_json = True)
+		else:
+			json_file = data_digger.main(return_json = True)
+		#self.wfile.write(str(date).encode())
+		self.wfile.write(json_file.encode())
+
+
+def main():
+	webserver = HTTPServer((HOSTNAME, SERVER_PORT), handler)
+	print("Server up, reachable to http://%s:%s" % (HOSTNAME, SERVER_PORT))
+	webserver.serve_forever()
+
+
+if __name__ == '__main__':
+	main()
