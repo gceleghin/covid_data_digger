@@ -54,14 +54,14 @@ def processDataIntoRegions(dataset = getData(), day = str(date.today())):
     print("Processing statistics for %s" % day)
     for values in dataset:
         if values['data'][:10] == day:
-            if values['denominazione_regione'] == "P.A. Bolzano":
+            if values['denominazione_regione'] in ['P.A. Bolzano', 'P.A. Trento']:
                 values['denominazione_regione'] = "Trentino - Alto Adige"
-            if values['denominazione_regione'] == "P.A. Trento":
-                values['denominazione_regione'] = "Trentino - Alto Adige"
+
             if values['denominazione_regione'] not in regions.keys():
                 regions[values['denominazione_regione']] = values['totale_casi']
             else:
                 regions[values['denominazione_regione']] += values['totale_casi']
+
     return regions
 
 def sortRegions(regions):
