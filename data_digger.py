@@ -9,13 +9,16 @@ from urllib.request import urlopen
 URL_LATEST_DATA = "https://github.com/pcm-dpc/COVID-19/raw/master/dati-json/dpc-covid19-ita-province-latest.json"
 URL_ALL_DATA = "https://github.com/pcm-dpc/COVID-19/raw/master/dati-json/dpc-covid19-ita-province.json"
 DATE_BEGINNING_DATA = "2020-02-24"
-
-#date_to_check = str(date.today())
 DATE_FORMAT = "%Y-%m-%d"
 
 regions = {}
 
 def dateChecker(day):
+    """
+    Checks a string to see if the date format is correct,
+    if the day is valid and returns it if it's correct,
+    returns 'today' if not
+    """
     try:
         date_to_check = str(datetime.strptime(day, DATE_FORMAT))[:10]
         if (date_to_check < DATE_BEGINNING_DATA):
@@ -29,8 +32,8 @@ def dateChecker(day):
 
 def getData(url = URL_ALL_DATA):
     """
-    Gets the data from a specified url
-    defaulting to all the data available
+    Gets the data from a specified url defaulting
+    to the json containing all the data available on github
     """
     response = urlopen(url)
     dataset = json.loads(response.read())
@@ -59,15 +62,9 @@ def processDataIntoRegions(dataset = getData(), day = str(date.today())):
 def sortRegions(regions):
     """
     Sorts the regions by number of cases first,
-    alphabetically if there's regions with the same values
+    then alphabetically if there's regions with the same values
     """
-    # We can use "reverse = True" using 'totale_casi' as key
-    # because we want them in descending order,
-    # but we wouldn't be able to alphabetically sort the regions
-    # as it would apply the reversed order to them as well
-    #
-    # By using the negative value of 'totale_casi' we can use
-    # the regions' names as a secondary key
+
     if regions:
         regions = dict(
             sorted(
@@ -85,6 +82,9 @@ def printValues(dataset):
         print(region + ": " + str(cases))
 
 def writeToXlsx(dataset, day):
+    """
+    Creates an xlsx file for the selected day
+    """
     workbook = xlsxwriter.Workbook("Covid_data_" + day + ".xlsx")
     worksheet = workbook.add_worksheet(day)
 
@@ -103,6 +103,9 @@ def writeToXlsx(dataset, day):
     workbook.close()
 
 def writeToXls(dataset, day):
+    """
+    Creates an xls file for the selected day
+    """
     workbook = xlwt.Workbook(encoding = "utf-8")
     worksheet = workbook.add_sheet(day)
 
@@ -119,27 +122,6 @@ def writeToXls(dataset, day):
         row += 1
 
     workbook.save("Covid_data_" + day + ".xls")
-
-
-# Before getting to the negative value solution above,
-# I was sorting by name first, then I was doing a second pass
-# using the values as a key
-
-# if regions:
-#   regions = dict(
-#       sorted(
-#           regions.items(),
-#           key=lambda item: (item[0]),
-#       )   
-#   )
-# if regions:
-#   regions = dict(
-#       sorted(
-#           regions.items(),
-#           key=lambda item: (item[1]),
-#           reverse = True
-#       )   
-#   )
 
 def main(args = None, day = str(date.today()), return_json = False):
     
