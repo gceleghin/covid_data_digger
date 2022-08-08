@@ -5,6 +5,7 @@ import xlwt
 from datetime import date
 from datetime import datetime
 from urllib.request import urlopen
+from urllib.error import URLError
 
 URL_LATEST_DATA = "https://github.com/pcm-dpc/COVID-19/raw/master/dati-json/dpc-covid19-ita-province-latest.json"
 URL_ALL_DATA = "https://github.com/pcm-dpc/COVID-19/raw/master/dati-json/dpc-covid19-ita-province.json"
@@ -27,7 +28,7 @@ def dateChecker(day):
         else:
             return(date_to_check)
     except ValueError:
-        print("Date format not valid, defaulting to today")
+        print("Date format not valid, defaulting to today.")
         return(str(date.today()))
 
 def getData(url = URL_ALL_DATA):
@@ -35,8 +36,12 @@ def getData(url = URL_ALL_DATA):
     Gets the data from a specified url defaulting
     to the json containing all the data available on github
     """
-    response = urlopen(url)
-    dataset = json.loads(response.read())
+    try:
+        response = urlopen(url)
+        dataset = json.loads(response.read())
+    except URLError:
+        print("Error: data on github seems to be unreachable at the moment.")
+        dataset = {}
     return dataset
 
 
@@ -131,7 +136,7 @@ def main(args = None, day = str(date.today()), return_json = False):
     else:
         day = dateChecker(day)
 
-    regions = processDataIntoRegions(getData(), day)
+    regions = processDataIntoRegions(day = day)
     
     if (len(regions.items())) > 0:
         regions = sortRegions(regions)
