@@ -35,6 +35,7 @@ def date_checker(day):
         print("Error: there has been a problem during the date check. Defaulting to today.")
         return(str(date.today()))
 
+
 def get_data(url = URL_ALL_DATA):
     """
     Gets the data from a specified url defaulting
@@ -71,12 +72,12 @@ def process_data_into_regions(dataset = get_data(), day = str(date.today())):
 
     return regions
 
+
 def sort_regions(regions):
     """
     Sorts the regions by number of cases first,
     then alphabetically if there's regions with the same values
     """
-
     if regions:
         regions = dict(
             sorted(
@@ -86,12 +87,14 @@ def sort_regions(regions):
         )
     return regions
 
+
 def print_values(dataset):
     """
     Prints the values in a readable format
     """
     for region, cases in dataset.items():
         print(region + ": " + str(cases))
+
 
 def write_to_xlsx(dataset, day):
     """
@@ -114,6 +117,7 @@ def write_to_xlsx(dataset, day):
 
     workbook.close()
 
+
 def write_to_xls(dataset, day):
     """
     Creates an xls file for the selected day
@@ -135,8 +139,8 @@ def write_to_xls(dataset, day):
 
     workbook.save("Covid_data_" + day + ".xls")
 
-def main(args = None, return_json = False):
 
+def main(args = None, return_json = False):
     args = parse_arguments(args)
 
     if (args.date):
@@ -163,6 +167,7 @@ def main(args = None, return_json = False):
             return jsonfile
     else:
         print("No data available for the day selected.")
+
 
 def parse_arguments(args):
     parser = argparse.ArgumentParser(description='Covid data digger')
@@ -191,7 +196,6 @@ def parse_arguments(args):
 
 
 def file_parser(fileToRead):
-
     try:
         fileToOpen = open(fileToRead)
         data = json.load(fileToOpen)
