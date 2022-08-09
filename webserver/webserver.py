@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
+from socket import gaierror
 import sys
 import os
 root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
@@ -25,7 +26,11 @@ class handler (BaseHTTPRequestHandler):
 
 
 def main():
-    webserver = HTTPServer((HOSTNAME, SERVER_PORT), handler)
+    try:
+        webserver = HTTPServer((HOSTNAME, SERVER_PORT), handler)
+    except gaierror:
+        print("Error: cannot establish a connection")
+        exit()
     print("Server up, reachable to http://%s:%s" % (HOSTNAME, SERVER_PORT))
     webserver.serve_forever()
 
