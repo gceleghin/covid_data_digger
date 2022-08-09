@@ -28,7 +28,7 @@ def dateChecker(day):
         else:
             return(date_to_check)
     except ValueError:
-        print("Date format not valid, defaulting to today.")
+        print("Date format not valid, defaulting to today. Format expected: yyyy-mm-dd")
         return(str(date.today()))
 
 def getData(url = URL_ALL_DATA):
