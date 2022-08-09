@@ -15,7 +15,7 @@ DATE_FORMAT = "%Y-%m-%d"
 
 regions = {}
 
-def dateChecker(day):
+def date_checker(day):
     """
     Checks a string to see if the date format is correct,
     if the day is valid and returns it if it's correct,
@@ -35,7 +35,7 @@ def dateChecker(day):
         print("Error: there has been a problem during the date check. Defaulting to today.")
         return(str(date.today()))
 
-def getData(url = URL_ALL_DATA):
+def get_data(url = URL_ALL_DATA):
     """
     Gets the data from a specified url defaulting
     to the json containing all the data available on github
@@ -52,7 +52,7 @@ def getData(url = URL_ALL_DATA):
     return dataset
 
 
-def processDataIntoRegions(dataset = getData(), day = str(date.today())):
+def process_data_into_regions(dataset = get_data(), day = str(date.today())):
     """
     Returns a dictionary containing 'region': 'cases' pairs
     Accepts a dataset, downloads it if not available
@@ -71,7 +71,7 @@ def processDataIntoRegions(dataset = getData(), day = str(date.today())):
 
     return regions
 
-def sortRegions(regions):
+def sort_regions(regions):
     """
     Sorts the regions by number of cases first,
     then alphabetically if there's regions with the same values
@@ -86,14 +86,14 @@ def sortRegions(regions):
         )
     return regions
 
-def printValues(dataset):
+def print_values(dataset):
     """
     Prints the values in a readable format
     """
     for region, cases in dataset.items():
         print(region + ": " + str(cases))
 
-def writeToXlsx(dataset, day):
+def write_to_xlsx(dataset, day):
     """
     Creates an xlsx file for the selected day
     """
@@ -114,7 +114,7 @@ def writeToXlsx(dataset, day):
 
     workbook.close()
 
-def writeToXls(dataset, day):
+def write_to_xls(dataset, day):
     """
     Creates an xls file for the selected day
     """
@@ -137,34 +137,34 @@ def writeToXls(dataset, day):
 
 def main(args = None, return_json = False):
 
-    args = parseArguments(args)
+    args = parse_arguments(args)
 
     if (args.date):
-        day = dateChecker(args.date)
+        day = date_checker(args.date)
     else:
         day = str(date.today())
 
     if (args.file):
-        data_from_file = fileParser(args.file)
-        regions = processDataIntoRegions(dataset = data_from_file, day = day)
+        data_from_file = file_parser(args.file)
+        regions = process_data_into_regions(dataset = data_from_file, day = day)
     else:
-        regions = processDataIntoRegions(day = day)
+        regions = process_data_into_regions(day = day)
 
     if (len(regions.items())) > 0:
-        regions = sortRegions(regions)
+        regions = sort_regions(regions)
         if not (return_json):
-            printValues(regions)
+            print_values(regions)
         if (args.xlsx):
-            writeToXlsx(regions, day)
+            write_to_xlsx(regions, day)
         if (args.xls):
-            writeToXls(regions, day)
+            write_to_xls(regions, day)
         if (return_json):
             jsonfile = json.dumps(regions)
             return jsonfile
     else:
         print("No data available for the day selected.")
 
-def parseArguments(args):
+def parse_arguments(args):
     parser = argparse.ArgumentParser(description='Covid data digger')
     parser.add_argument(
         '--date',
@@ -190,7 +190,7 @@ def parseArguments(args):
     return(args)
 
 
-def fileParser(fileToRead):
+def file_parser(fileToRead):
 
     try:
         fileToOpen = open(fileToRead)
