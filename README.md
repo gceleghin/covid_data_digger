@@ -12,7 +12,7 @@ The script uses XlsxWriter and xlwt to write Xlsx and xls files respectively, so
 to install them.
 
 ## Run the script
-The default mode of operation has the script downloading the latest JSON from github and return the results from today.
+The default mode of operation has the script downloading the latest JSON from github and return the results from today:  
 `python3 data_digger.py`
 
 It also accepts some arguments:  
