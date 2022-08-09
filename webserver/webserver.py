@@ -18,7 +18,7 @@ class handler (BaseHTTPRequestHandler):
 
         date = parse_qs(urlparse(self.path).query).get("date")
         if (date):
-            json_file = data_digger.main(day = date[0], return_json = True)
+            json_file = data_digger.main(['--date',date[0]], return_json = True)
         else:
             json_file = data_digger.main(return_json = True)
 

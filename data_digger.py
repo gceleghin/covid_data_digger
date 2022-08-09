@@ -1,3 +1,4 @@
+import sys
 import argparse
 import json
 import xlsxwriter
@@ -128,13 +129,14 @@ def writeToXls(dataset, day):
 
     workbook.save("Covid_data_" + day + ".xls")
 
-def main(args = None, day = str(date.today()), return_json = False):
-    
-    if (args):
-        if (args.date):
-            day = dateChecker(args.date)
+def main(args = None, return_json = False):
+
+    args = parseArguments(args)
+
+    if (args.date):
+        day = dateChecker(args.date)
     else:
-        day = dateChecker(day)
+        day = str(date.today())
 
     regions = processDataIntoRegions(day = day)
     
@@ -142,18 +144,17 @@ def main(args = None, day = str(date.today()), return_json = False):
         regions = sortRegions(regions)
         if not (return_json):
             printValues(regions)
-        if (args):
-            if (args.xlsx):
-                writeToXlsx(regions, day)
-            if (args.xls):
-                writeToXls(regions, day)
+        if (args.xlsx):
+            writeToXlsx(regions, day)
+        if (args.xls):
+            writeToXls(regions, day)
         if (return_json):
             jsonfile = json.dumps(regions)
             return jsonfile
     else:
         print("No data available for the day selected.")
 
-if __name__ == '__main__':
+def parseArguments(args):
     parser = argparse.ArgumentParser(description='Covid data digger')
     parser.add_argument(
         '--date',
@@ -170,6 +171,8 @@ if __name__ == '__main__':
         action='store_true',
         help = "Write the results in an .xls file"
     )
-    args = parser.parse_args()
+    args = parser.parse_args(args)
+    return(args)
 
-    main(args)
+if __name__ == '__main__':
+    main(sys.argv[1:])
