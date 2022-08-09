@@ -46,6 +46,9 @@ def getData(url = URL_ALL_DATA):
     except URLError:
         print("Error: data on github seems to be unreachable at the moment.")
         dataset = {}
+    except ValueError:
+        print("Error: Data cannot be decoded as JSON. Exiting.")
+        exit()
     return dataset
 
 
