@@ -46,7 +46,7 @@ def getData(url = URL_ALL_DATA):
     except URLError:
         print("Error: data on github seems to be unreachable at the moment.")
         dataset = {}
-    except ValueError:
+    except json.decoder.JSONDecodeError:
         print("Error: Data cannot be decoded as JSON. Exiting.")
         exit()
     return dataset
@@ -144,8 +144,12 @@ def main(args = None, return_json = False):
     else:
         day = str(date.today())
 
-    regions = processDataIntoRegions(day = day)
-    
+    if (args.file):
+        data_from_file = fileParser(args.file)
+        regions = processDataIntoRegions(dataset = data_from_file, day = day)
+    else:
+        regions = processDataIntoRegions(day = day)
+
     if (len(regions.items())) > 0:
         regions = sortRegions(regions)
         if not (return_json):
@@ -177,8 +181,29 @@ def parseArguments(args):
         action='store_true',
         help = "Write the results in an .xls file"
     )
+    parser.add_argument(
+        '--file',
+        type = str,
+        help = "Read data from file instead of downloading it"
+    )
     args = parser.parse_args(args)
     return(args)
+
+
+def fileParser(fileToRead):
+
+    try:
+        fileToOpen = open(fileToRead)
+        data = json.load(fileToOpen)
+        fileToOpen.close()
+    except FileNotFoundError:
+        print("File not found, downloading data from Github")
+        data = {}
+    except json.decoder.JSONDecodeError:
+        print("Error: Data cannot be decoded as JSON, downloading data from Github")
+        data = {}
+
+    return data
 
 if __name__ == '__main__':
     main(sys.argv[1:])
