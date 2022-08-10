@@ -28,6 +28,10 @@ There is also a webserver that when run replies to GET requests with a JSON cont
 If you clone the repo, run:  
 `python3 webserver/webserver.py`
 
-Once the webserver is up and running it is reachable by connecting to http://coviddatadigger:8080.
+It also accepts some arguments:
+`--hostname STRING` to specify the hostname
+`--port INT` to specify which port the webserver should use
+
+Once the webserver is up and running it is reachable by connecting to http://hostname:port, default values are http://coviddatadigger:8080.  
 A simple GET request will return a JSON containing the data for today, but you can also pass a 'date' parameter to get data for another day, eg:
 `http://coviddatadigger:8080/?date=2022-01-01`
