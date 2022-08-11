@@ -95,35 +95,15 @@ def print_values(dataset):
     for region, cases in dataset.items():
         print(region + ": " + str(cases))
 
+def write_to_xls_xlsx(dataset, day, filetype):
+    filename = "Covid_data_" + day
 
-def write_to_xlsx(dataset, day):
-    """
-    Creates an xlsx file for the selected day
-    """
-    workbook = xlsxwriter.Workbook("Covid_data_" + day + ".xlsx")
-    worksheet = workbook.add_worksheet(day)
-
-    row = 0
-    col = 0
-
-    worksheet.write(row, col, "Region")
-    worksheet.write(row, col + 1, "Cases")
-    row += 1
-
-    for region, cases in dataset.items():
-        worksheet.write(row, col, region)
-        worksheet.write(row, col + 1, cases)
-        row += 1
-
-    workbook.close()
-
-
-def write_to_xls(dataset, day):
-    """
-    Creates an xls file for the selected day
-    """
-    workbook = xlwt.Workbook(encoding = "utf-8")
-    worksheet = workbook.add_sheet(day)
+    if filetype == "xls":
+        workbook = xlwt.Workbook(encoding = "utf-8")
+        worksheet = workbook.add_sheet(day)
+    else:
+        workbook = xlsxwriter.Workbook(filename + ".xlsx")
+        worksheet = workbook.add_worksheet(day)
 
     row = 0
     col = 0
@@ -137,7 +117,10 @@ def write_to_xls(dataset, day):
         worksheet.write(row, col + 1, cases)
         row += 1
 
-    workbook.save("Covid_data_" + day + ".xls")
+    if filetype == "xls":
+        workbook.save(filename + ".xls")
+    else:
+        workbook.close()
 
 
 def main(args=None, return_json=False):
@@ -159,9 +142,11 @@ def main(args=None, return_json=False):
         if not return_json:
             print_values(regions)
         if args.xlsx:
-            write_to_xlsx(regions, day)
+            #write_to_xlsx(regions, day)
+            write_to_xls_xlsx(regions, day, "xlsx")
         if args.xls:
-            write_to_xls(regions, day)
+            #write_to_xls(regions, day)
+            write_to_xls_xlsx(regions, day, "xls")
     else:
         print("No data available for the day selected.")
 
