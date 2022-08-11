@@ -163,6 +163,7 @@ def file_parser(fileToRead):
         fileToOpen = open(fileToRead)
         data = json.load(fileToOpen)
         fileToOpen.close()
+        print("Data taken from %s." % fileToRead)
     except FileNotFoundError:
         print("File not found, downloading data from Github")
         data = {}
@@ -197,7 +198,7 @@ def main(args=None, return_json=False):
             write_to_xls_xlsx(regions, day, "xls")
     else:
         print("No data available for the day selected.")
-        if day == str(date.today()):
+        if day == str(date.today()) and not args.file:
             print("Data for today may not be available yet, try again later.")
 
     if return_json:
