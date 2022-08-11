@@ -13,7 +13,6 @@ URL_ALL_DATA = "https://github.com/pcm-dpc/COVID-19/raw/master/dati-json/dpc-cov
 DATE_BEGINNING_DATA = "2020-02-24"
 DATE_FORMAT = "%Y-%m-%d"
 
-regions = {}
 
 def date_checker(day):
     """
@@ -60,6 +59,7 @@ def process_data_into_regions(dataset = get_data(), day = str(date.today())):
     Accepts a date to check, defaults to today
     """
     print("Processing statistics for %s" % day)
+    regions = {}
     for values in dataset:
         if values['data'][:10] == day:
             if values['denominazione_regione'] in ['P.A. Bolzano', 'P.A. Trento']:
