@@ -23,6 +23,8 @@ def date_checker(day):
         date_to_check = str(datetime.strptime(day, DATE_FORMAT))[:10]
         if date_to_check < DATE_BEGINNING_DATA:
             print("There is no data available before February 24th 2020, defaulting to today.")
+            return str(date.today())        elif date_to_check > str(date.today()):
+            print("Date specified has yet to come! Defaulting to today.")
             return str(date.today())
         else:
             return date_to_check
