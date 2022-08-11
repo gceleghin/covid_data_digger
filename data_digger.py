@@ -52,12 +52,19 @@ def get_data(url=URL_ALL_DATA):
     return dataset
 
 
-def process_data_into_regions(dataset=get_data(), day=str(date.today())):
+def process_data_into_regions(dataset=None, day=str(date.today())):
     """
     Returns a dictionary containing 'region': 'cases' pairs
     Accepts a dataset, downloads it if not available
     Accepts a date to check, defaults to today
     """
+    # If the data requested is for today we don't need to download all the data
+    if not dataset:
+        if day == str(date.today()):
+            dataset = get_data(URL_LATEST_DATA)
+        else:
+            dataset = get_data()
+
     print("Processing statistics for %s" % day)
     regions = {}
     for values in dataset:
@@ -149,6 +156,9 @@ def main(args=None, return_json=False):
             write_to_xls_xlsx(regions, day, "xls")
     else:
         print("No data available for the day selected.")
+        if day == str(date.today()):
+            print("Data for today may not be available yet, try again later.")
+
 
     if return_json:
         jsonfile = json.dumps(regions)
