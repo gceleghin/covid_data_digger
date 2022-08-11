@@ -18,7 +18,7 @@ class handler (BaseHTTPRequestHandler):
 
         date_passed = parse_qs(urlparse(self.path).query).get("date")
 
-        if (date_passed):
+        if date_passed:
             json_file = data_digger.main(['--date', date_passed[0]], return_json = True)
         else:
             json_file = data_digger.main(['--date', str(date.today())], return_json = True)
@@ -39,16 +39,16 @@ def parse_web_arguments(arguments):
         help = "port number for the webserver"
     )
     arguments = argument_parser.parse_args(arguments)
-    return(arguments)
+    return arguments
 
 
 def main(arguments=None):
     arguments = parse_web_arguments(arguments)
-    if (arguments.hostname):
+    if arguments.hostname:
         hostname = arguments.hostname
     else:
         hostname = "coviddatadigger"
-    if (arguments.port):
+    if arguments.port:
         server_port = arguments.port
     else:
         server_port = 8080
