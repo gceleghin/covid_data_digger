@@ -7,8 +7,8 @@ Data is fetched directly from the Italian Civil Protection department github pag
 Just clone the repo and install the additional modules, no setup required.
 
 ## Modules
-The script uses XlsxWriter and xlwt to write Xlsx and xls files respectively, so just type:  
-`pip install XlsxWriter xlwt`  
+The script uses XlsxWriter and xlwt to write Xlsx and xls files respectively. Just type:  
+`pip install -r requirements.txt`  
 to install them.
 
 ## Run the script
