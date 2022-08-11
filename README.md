@@ -13,7 +13,7 @@ to install them.
 
 ## Run the script
 The default mode of operation has the script downloading the latest JSON from github and return the results from today.  
-Run it by executing
+Run it by executing  
 `python3 data_digger.py` or  
 `./data_digger.py`
 
