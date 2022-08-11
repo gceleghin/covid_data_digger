@@ -12,8 +12,10 @@ The script uses XlsxWriter and xlwt to write Xlsx and xls files respectively. Ju
 to install them.
 
 ## Run the script
-The default mode of operation has the script downloading the latest JSON from github and return the results from today:  
-`python3 data_digger.py`
+The default mode of operation has the script downloading the latest JSON from github and return the results from today.  
+Run it by executing
+`python3 data_digger.py` or  
+`./data_digger.py`
 
 It also accepts some arguments:  
 `--date DATE` to show results from the DATE specified. It expects a 'yyyy-mm-dd' format, eg: 2022-01-01  
@@ -25,8 +27,9 @@ It also accepts some arguments:
 There is also a webserver that when run replies to GET requests with a JSON containing the information required.
 
 ## Run the webserver
-If you clone the repo, run:  
-`python3 webserver/webserver.py`
+If you clone the repo, run from the root:  
+`python3 webserver/webserver.py` or  
+`webserver/webserver.py`
 
 It also accepts some arguments:  
 `--hostname STRING` to specify the hostname  
