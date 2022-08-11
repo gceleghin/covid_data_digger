@@ -162,11 +162,13 @@ def main(args = None, return_json = False):
             write_to_xlsx(regions, day)
         if (args.xls):
             write_to_xls(regions, day)
-        if (return_json):
-            jsonfile = json.dumps(regions)
-            return jsonfile
     else:
         print("No data available for the day selected.")
+    
+    if (return_json):
+        jsonfile = json.dumps(regions)
+        return jsonfile
+    
 
 
 def parse_arguments(args):

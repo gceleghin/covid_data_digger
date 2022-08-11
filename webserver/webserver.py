@@ -16,9 +16,10 @@ class handler (BaseHTTPRequestHandler):
         self.send_header('content-type', 'application/json')
         self.end_headers()
 
-        date = parse_qs(urlparse(self.path).query).get("date")
-        if (date):
-            json_file = data_digger.main(['--date',date[0]], return_json = True)
+        date_passed = parse_qs(urlparse(self.path).query).get("date")
+
+        if (date_passed):
+            json_file = data_digger.main(['--date', date_passed[0]], return_json = True)
         else:
             json_file = data_digger.main(['--date', str(date.today())], return_json = True)
 
