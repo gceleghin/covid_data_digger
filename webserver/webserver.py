@@ -52,12 +52,14 @@ def main(arguments=None):
         server_port = arguments.port
     else:
         server_port = 8080
+
     try:
         webserver = HTTPServer((hostname, server_port), handler)
     except gaierror as e:
         print("Error: cannot establish a connection")
         print(e)
         exit()
+
     print("Server up, reachable to http://%s:%s" % (hostname, server_port))
     webserver.serve_forever()
 

@@ -16,19 +16,18 @@ DATE_FORMAT = "%Y-%m-%d"
 
 def date_checker(day):
     """
-    Checks a string to see if the date format is correct,
-    if the day is valid and returns it if it's correct,
-    returns 'today' if not
+    Checks a string to see if the date format is correct and the day is valid
+    returns it if it's correct, returns 'today' if not
     """
     try:
         date_to_check = str(datetime.strptime(day, DATE_FORMAT))[:10]
         if date_to_check < DATE_BEGINNING_DATA:
-            print("There is no data available before February 24th 2020, defaulting to today")
+            print("There is no data available before February 24th 2020, defaulting to today.")
             return str(date.today())
         else:
             return date_to_check
     except ValueError:
-        print("Error: Date format not valid, defaulting to today. Format expected: yyyy-mm-dd")
+        print("Error: Date format not valid, defaulting to today. Format expected: yyyy-mm-dd.")
         return str(date.today())
     except TypeError:
         print("Error: there has been a problem during the date check. Defaulting to today.")
@@ -58,7 +57,7 @@ def process_data_into_regions(dataset=None, day=str(date.today())):
     Accepts a dataset, downloads it if not available
     Accepts a date to check, defaults to today
     """
-    # If the data requested is for today we don't need to download all the data
+    # If the data requested is for today we can download just the latest data
     if not dataset:
         if day == str(date.today()):
             dataset = get_data(URL_LATEST_DATA)
@@ -130,42 +129,6 @@ def write_to_xls_xlsx(dataset, day, filetype):
         workbook.close()
 
 
-def main(args=None, return_json=False):
-    args = parse_arguments(args)
-
-    if args.date:
-        day = date_checker(args.date)
-    else:
-        day = str(date.today())
-
-    if args.file:
-        data_from_file = file_parser(args.file)
-        regions = process_data_into_regions(dataset = data_from_file, day = day)
-    else:
-        regions = process_data_into_regions(day = day)
-
-    if regions.items():
-        regions = sort_regions(regions)
-        if not return_json:
-            print_values(regions)
-        if args.xlsx:
-            #write_to_xlsx(regions, day)
-            write_to_xls_xlsx(regions, day, "xlsx")
-        if args.xls:
-            #write_to_xls(regions, day)
-            write_to_xls_xlsx(regions, day, "xls")
-    else:
-        print("No data available for the day selected.")
-        if day == str(date.today()):
-            print("Data for today may not be available yet, try again later.")
-
-
-    if return_json:
-        jsonfile = json.dumps(regions)
-        return jsonfile
-    
-
-
 def parse_arguments(args):
     parser = argparse.ArgumentParser(description='Covid data digger')
     parser.add_argument(
@@ -205,6 +168,38 @@ def file_parser(fileToRead):
         data = {}
 
     return data
+
+
+def main(args=None, return_json=False):
+    args = parse_arguments(args)
+
+    if args.date:
+        day = date_checker(args.date)
+    else:
+        day = str(date.today())
+
+    if args.file:
+        data_from_file = file_parser(args.file)
+        regions = process_data_into_regions(dataset = data_from_file, day = day)
+    else:
+        regions = process_data_into_regions(day = day)
+
+    if regions.items():
+        regions = sort_regions(regions)
+        if not return_json:
+            print_values(regions)
+        if args.xlsx:
+            write_to_xls_xlsx(regions, day, "xlsx")
+        if args.xls:
+            write_to_xls_xlsx(regions, day, "xls")
+    else:
+        print("No data available for the day selected.")
+        if day == str(date.today()):
+            print("Data for today may not be available yet, try again later.")
+
+    if return_json:
+        jsonfile = json.dumps(regions)
+        return jsonfile
 
 if __name__ == '__main__':
     main(sys.argv[1:])
